@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>JSON TEST</title>
+	<link rel="stylesheet" type="text/css" href="test.css">
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script>
+		$(function () {
+			// 最初に読み込むやつ
+			$.ajax({
+				type: "GET",
+				url: "https://tdr-wdct.com/json.php",
+				dataType: "jsonp",
+				jsonpCallback: "callback",
+				cache: false,
+				success: function (res) {
+					var output = []
+					//alert(data.responseMessage);
+					// console.log(res)
+					res.forEach((elements, index) => {
+						var newP = document.createElement("p");
+						newP.innerHTML = elements.themeport
+
+						var contents = []
+						elements.attractions.forEach((elements2, index2) => {
+							var newDiv = []
+							for (i = 0; i < 6; i++) {
+								newDiv[i] = document.createElement("div");
+							}
+							newDiv[0].innerHTML = elements2.name
+							newDiv[1].innerHTML = elements2.status
+							newDiv[2].innerHTML = elements2.runtime
+							newDiv[3].innerHTML = elements2.time
+							newDiv[4].innerHTML = elements2.fp
+							newDiv[5].innerHTML = elements2.update
+							for (i = 0; i < 6; i++) {
+								newP.appendChild(newDiv[i])
+							}
+						})
+						output.push(
+							newP
+						)
+					})
+
+					res = JSON.stringify(res);
+					$("#result").append(output);
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					alert("リクエスト時になんらかのエラーが発生しました：" + textStatus + ":\n" + errorThrown);
+				}
+			});
+
+			$("#reload").click(function () {
+				location.reload();
+			});
+
+
+
+		});
+	</script>
+</head>
+
+<body>
+	<input id="reload" type="button" value="reload">
+	<div id="result">
+	</div>
+</body>
+
+</html>
